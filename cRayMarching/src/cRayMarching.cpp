@@ -6,11 +6,14 @@
 // Description : Hello World in C++, Ansi-style
 //============================================================================
 #include <iostream>
+#include <opencv2/highgui/highgui.hpp>
+#include "opencv2/imgproc/imgproc.hpp"
 #include "vector3d.h"
 
-typedef Vector3D vec3;
-
 using namespace std;
+using namespace cv;
+
+typedef Vector3D vec3;
 
 float sdPlane( vec3 p, vec3 n, float d )
 {
