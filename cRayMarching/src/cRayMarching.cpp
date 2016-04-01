@@ -141,8 +141,10 @@ void renderImage( vec3 *image )
         image[i+j*xres]=c;
     }
 }
-int main() {
-	vec3 a;
+int main(int argc, char** argv) {
+	char *imagepath=argv[1];
+    Mat image = imread(imagepath, IMREAD_COLOR );
+    imshow("Display Image", image);
 	cout << "!!!Hello World!!!" << endl; // prints !!!Hello World!!!
 	return 0;
 }
