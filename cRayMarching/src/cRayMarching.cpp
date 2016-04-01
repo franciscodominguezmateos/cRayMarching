@@ -142,8 +142,21 @@ void renderImage( vec3 *image )
     }
 }
 int main(int argc, char** argv) {
-	char *imagepath=argv[1];
-    Mat image = imread(imagepath, IMREAD_COLOR );
+	const int xres=320;
+	const int yres=240;
+	//char *imagepath=argv[1];
+    //Mat image = imread(imagepath, IMREAD_COLOR );
+    Mat image(Size(320,240),CV_8UC3);
+    vec3 *imgvec3=new vec3[320*240];
+    renderImage(imgvec3);
+    for( int j=0; j < yres; j++ )
+    for( int i=0; i < xres; i++ ){
+    	Vec3b intensity;
+    	intensity.val[0]=imgvec3[i+j*xres].z;
+    	intensity.val[0]=imgvec3[i+j*xres].y;
+    	intensity.val[0]=imgvec3[i+j*xres].x;
+    	image.at<Vec3b>(j,i)=intensity;
+    }
     imshow("Display Image", image);
 	cout << "!!!Hello World!!!" << endl; // prints !!!Hello World!!!
 	return 0;

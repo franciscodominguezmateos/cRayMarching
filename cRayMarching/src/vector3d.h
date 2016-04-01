@@ -548,7 +548,7 @@ inline float Vector3D::length(){
 }
 
 inline void Vector3D::normalize(){
-    float magnitude = length();
+    float magnitude = length()+0.00001;
     assert(!equalsZero(magnitude));
 
     magnitude = 1.0f / magnitude;
