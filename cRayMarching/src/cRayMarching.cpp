@@ -69,7 +69,8 @@ float opScale( vec3 p, float s )
 }
 */
 float f(vec3 p){
-	return opU(sdPlane(p,vec3(0,1,0),0),sdSphere(p,3));
+	//return opU(sdPlane(p,vec3(0,1,0),0),sdSphere(p,3));
+	return sdSphere(p,4);
 }
 vec3 df(vec3 p){
 	float eps=0.001;
@@ -93,8 +94,8 @@ Ray generateRayForPixel(int i,int j){
 	const float yres=240/2;
 	float x=-xres+i;
 	float y=-yres+j;
-	vec3 p(x,y,1);
-	vec3 o;
+	vec3 p(x/40,y/40,-5);
+	vec3 o(0,0,-6);
 	vec3 d;
 	d=p-o;
 	Ray r;
@@ -118,6 +119,7 @@ void renderImage( vec3 *image )
     for( int j=0; j < yres; j++ )
     for( int i=0; i < xres; i++ ){
         Ray ray = generateRayForPixel( i, j );
+        cout << ray.origin << "-" << ray.direction << endl;
         float t=0;
         float d;
         vec3 p;
@@ -151,13 +153,19 @@ int main(int argc, char** argv) {
     renderImage(imgvec3);
     for( int j=0; j < yres; j++ )
     for( int i=0; i < xres; i++ ){
-    	Vec3b intensity;
-    	intensity.val[0]=imgvec3[i+j*xres].z;
-    	intensity.val[0]=imgvec3[i+j*xres].y;
-    	intensity.val[0]=imgvec3[i+j*xres].x;
-    	image.at<Vec3b>(j,i)=intensity;
+    	Vec3b intensity=image.at<Vec3b>(j,i);
+    	int r=imgvec3[i+j*xres].x*255;
+    	int g=imgvec3[i+j*xres].y*255;
+    	int b=imgvec3[i+j*xres].z*255;
+    	intensity.val[0]=b;
+    	intensity.val[0]=g;
+    	intensity.val[0]=r;
+    	image.at<Vec3b>(j,i)[0]=b;
+    	image.at<Vec3b>(j,i)[1]=g;
+    	image.at<Vec3b>(j,i)[2]=r;
     }
     imshow("Display Image", image);
 	cout << "!!!Hello World!!!" << endl; // prints !!!Hello World!!!
+	waitKey(0);
 	return 0;
 }
