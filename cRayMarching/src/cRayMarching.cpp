@@ -57,7 +57,7 @@ float opRep( vec3 p, vec3 c )
     return primitve( q );
 }
 //Rotation/Translation
-vec3 opTx( vec3 p, mat4 m )
+float opTx( vec3 p, mat4 m )
 {
     vec3 q = invert(m)*p;
     return primitive(q);
@@ -69,20 +69,20 @@ float opScale( vec3 p, float s )
 }
 */
 float f(vec3 p){
-	//return opU(sdPlane(p,vec3(0,1,0),0),sdSphere(p,3));
-	return sdSphere(p,4);
+	vec3 p1=-p+vec3(10,0,0);
+	return opU(sdSphere(p1,2),sdSphere(p,3));
+	//return sdSphere(p,4);
 }
 vec3 df(vec3 p){
-	float eps=0.001;
-	vec3 dx(-eps,0,0);
-	vec3 dy(0,-eps,0);
-	vec3 dz(0,0,-eps);
+	float eps=0.0001;
+	vec3 dx(eps,0,0);
+	vec3 dy(0,eps,0);
+	vec3 dz(0,0,eps);
 	float fp=f(p);
 	float dfx=(f(p+dx)-fp)/eps;
 	float dfy=(f(p+dy)-fp)/eps;
 	float dfz=(f(p+dz)-fp)/eps;
 	vec3 v(dfx,dfy,dfz);
-	v.normalize();
 	return v;
 }
 struct Ray {
@@ -93,7 +93,7 @@ Ray generateRayForPixel(int i,int j){
 	const float xres=320/2;
 	const float yres=240/2;
 	float x=-xres+i;
-	float y=-yres+j;
+	float y=-yres+240-j;
 	vec3 p(x/40,y/40,-5);
 	vec3 o(0,0,-6);
 	vec3 d;
@@ -119,7 +119,7 @@ void renderImage( vec3 *image )
     for( int j=0; j < yres; j++ )
     for( int i=0; i < xres; i++ ){
         Ray ray = generateRayForPixel( i, j );
-        cout << ray.origin << "-" << ray.direction << endl;
+        //cout << ray.origin << "-" << ray.direction << endl;
         float t=0;
         float d;
         vec3 p;
@@ -133,8 +133,10 @@ void renderImage( vec3 *image )
         if (t<maxdist){
         	vec3 cs=getColor(p);
         	vec3 n=df(p);
-        	vec3 light(0,0,0);
-        	float l=light*n;
+        	n.normalize();
+        	vec3 vlight(1,0,-1);
+        	vlight.normalize();
+        	float l=vlight*n;
         	c=cs*l;
         }
         else{//background
