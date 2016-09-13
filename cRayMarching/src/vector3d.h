@@ -28,7 +28,7 @@ public:
     // Sets the x, y and z components of this Vector to corresponding 
     // x, y and z parameters.
     //------------------------------------------------------------------
-    Vector3D (float x, float y, float z);
+    Vector3D (float x, float y=0, float z=0);
     //------------------------------------------------------------------
     // Copy Constructor
     //------------------------------------------------------------------

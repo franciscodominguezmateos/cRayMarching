@@ -14,7 +14,15 @@ using namespace std;
 using namespace cv;
 
 typedef Vector3D vec3;
+typedef Vector3D vec2;
 
+float sdCone(vec3 p, vec2 c){
+	//c must be normalized
+	c.normalize();
+	vec2  pxz=vec2(p.x,p.z);
+	float q=pxz.length();
+	return c*vec2(q,p.y);
+}
 float sdPlane( vec3 p, vec3 n, float d )
 {
   // n must be normalized
@@ -33,6 +41,11 @@ float udRoundBox( vec3 p, vec3 b, float r )
 {
   vec3 d=abs(p)-b;
   return max(d,0.0).length()-r;
+}
+float sdBox( vec3 p, vec3 b )
+{
+//  vec3 d = abs(p) - b;
+//  return min(max(d.x,max(d.y,d.z)),0.0) + length(max(d,0.0));
 }
 //Union
 float opU( float d1, float d2 )
@@ -57,7 +70,7 @@ float opRep( vec3 p, vec3 c )
     return primitve( q );
 }
 //Rotation/Translation
-float opTx( vec3 p, mat4 m )
+vec3 opTx( vec3 p, mat4 m )
 {
     vec3 q = invert(m)*p;
     return primitive(q);
@@ -69,9 +82,10 @@ float opScale( vec3 p, float s )
 }
 */
 float f(vec3 p){
-	vec3 p1=-p+vec3(10,0,0);
-	return opU(sdSphere(p1,2),sdSphere(p,3));
+	vec3 p1=-p+vec3(2,-1,0);
+	//return opU(udBox(p1,vec3(2,2,10)),opU(sdPlane(p,vec3(0,-1,0),2),opS(sdSphere(p1,5),sdSphere(p,5))));
 	//return sdSphere(p,4);
+	return sdCone(p1,vec2(1,-0.5));
 }
 vec3 df(vec3 p){
 	float eps=0.0001;
